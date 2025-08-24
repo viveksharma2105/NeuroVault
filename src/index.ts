@@ -12,18 +12,24 @@ app.post("/api/v1/signup", async (req, res) => {
     const username =req.body.username;
     const password = req.body.password;
 
-    await UserModel.create({
+    try{await UserModel.create({
         username: username,
         password: password
     })
     res.json({
         message: "User signed  up"
     })
-
+    }catch(e){
+        res.status(411).json({
+            message: "User already exists"
+        })
+    }
 
 })
 
 app.post("/api/v1/signin", (req, res) => {
+const username = req.body.username;
+const password =  req.body.password;
 
 })
 
@@ -47,3 +53,6 @@ app.post("/api/v1/neuro/share", (req, res) =>{
 app.get("/api/v1/neuro/:shareLink", (req, res) =>{
     
 })
+
+
+app.listen(3000);
