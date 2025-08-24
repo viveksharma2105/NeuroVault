@@ -1,4 +1,11 @@
-import mongoose,{ model, Schema } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL!)
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
