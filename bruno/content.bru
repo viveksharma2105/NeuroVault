@@ -1,0 +1,26 @@
+meta {
+  name: content
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/v1/content
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YWM3NjYwZjI1OGU3YjI4ODRiOWU1YyIsImlhdCI6MTc1NjE4NzIzMiwiZXhwIjoxNzU2MTkwODMyfQ.xb-5pHpOAi-iAGJYhYtFj2cROCl2SlT-uetrQpQPb9w
+}
+
+body:json {
+  {
+    "title": "docs about india",
+    "link": "google.com/india.pdf"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
