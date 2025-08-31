@@ -28,16 +28,16 @@ const tagSchema = new Schema({
 });
 */
 
-// const linkSchema = new Schema({
-//   hash: { type: String, required: true },
-//   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-// });
+const LinkSchema = new Schema({
+  hash: { type: String, required: true },
+  userId: { type: mongoose.Types.ObjectId, ref: 'User', required: true, unique:true },
+});
 
 
 
 export const UserModel =  model("User", UserSchema);
 export const contentModel =  model("Content", ContentSchema);
 // const tagModel =   model("tags", tagSchema);
-// const linkModel =  model("link", linkSchema)
+export const LinkModel =  model("Links", LinkSchema)
 
 

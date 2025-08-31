@@ -1,10 +1,12 @@
 import express from "express";
-import z from "zod"
+import z, { hash } from "zod"
 import jwt from "jsonwebtoken"
+import { random } from "./utils.js";
 import bcrypt from "bcrypt";
-import { contentModel, UserModel } from "./db.js";
+import { contentModel, LinkModel, UserModel } from "./db.js";
 import { JWT_PASSWORD } from "./config.js";
 import { userMiddleware } from "./middleware.js";
+
 
 
 const app = express();
@@ -129,12 +131,68 @@ app.delete("/api/v1/content",userMiddleware, async (req, res) => {
     })
 })
 
-app.post("/api/v1/neuro/share", (req, res) =>{
+app.post("/api/v1/neuro/share",userMiddleware, async (req, res) =>{
+const share = req.body.share;
+if (share) {
+  const existingLinks = await LinkModel.findOne({
+    //@ts-ignore
+    userId: req.userId
+  });
+  if (existingLinks) {
+     res.json({
+  hash: existingLinks.hash
+  })
+    return;
+  }
+  const hash = random(10);
+  await LinkModel.create({
+    //@ts-ignore
+    userId: req.userId,
+    hash: hash
+  })
+ 
+}else{
+  await LinkModel.deleteOne({
+    //@ts-ignore
+    userId: req.userId
+  });
+  res.json({
+    message: "Removed link"
+  })
+}
+
+
 
 })
 
-app.get("/api/v1/neuro/:shareLink", (req, res) =>{
-    
+app.get("/api/v1/neuro/:shareLink", async (req, res) =>{
+    const hash = req.params.shareLink;
+    const link = await LinkModel.findOne({
+      hash
+    });
+    if (!link) {
+      res.status(411).json({
+        message: "Sorry Incorrect Input"
+      })
+      return
+      
+    }
+    const content = await contentModel.find({
+      userId: link.userId
+    })
+    const user = await UserModel.findOne({
+      _id:link.userId
+    })
+    if (!user) {
+       res.status(411).json({
+        message: "User not Found,error"
+      })
+      return
+    }
+    res.json({
+      username:user.username,
+      content: content
+    })
 })
 
 
